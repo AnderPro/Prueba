@@ -1,32 +1,105 @@
-import logo from './logo.svg';
-import './App.css';
+import { Component } from 'react';
 
-const estilo2 = {
-  boxShadow: '0 5px 3px rgba(0, 0, 0, 0.5)'
+class Button extends Component {
+  state = {};
+  constructor(props){
+    super(props);
+    console.log('constructor', props);
+
+  }
+
+  componentDidMount(){
+    // se ejecuta al final
+    console.log('Component DidMount')
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    // cuando existe un cambio de estado en el componente se ejecuta esta funcion.
+    console.log('component did update', prevProps, prevState);
+  }
+
+  componentWillUnmount(){
+    console.log('desmontando un componente', this.props, this.state);
+  }
+
+  render(){
+    console.log('render en el button ', this.state);
+    return (
+      <button onClick={() => this.setState({prop: 1})}>
+      Enviar
+    </button>
+    )
+  }
 }
 
-const estilo1 = ({bg = '#222'})=>({
-  backgroundColor: bg,
-  color: '#fff',
-  padding: '10px 15px',
-  margin: '10px 15px'
-});
+class Input extends Component {
+  //state = { valor: '' };
+  
+  //handleChange = (value) => {
+    //this.setState({ valor: value });
+  //}
 
-const Li = ({children,estado}) => {
-  return (
-    <li style={{...estilo2, ...estilo1({bg: '#333'})}} 
-        className="clase-li">
-        {children} = {estado}
-    </li>
-  )
-}
-const App = () => {
-  const valor = 'triste';
-  return (
-    <ul  style={estilo1({bg:'#750'})} className="clase-css">
-      <Li estado="feliz">valor de li</Li>
-    </ul>
-  );
-}
+  componentDidUpdate(prevProps, prevState){
+    // cuando existe un cambio de estado en el componente se ejecuta esta funcion.
+    console.log('component did update', prevProps, prevState);
+  }
 
+  render(){
+    return (
+    //<input
+     //value={this.state.valor}
+      //onChange={e => this.handleChange(e.target.value)}/>
+      <input 
+        value={this.props.value}
+        onChange={this.props.onChange}
+      />
+
+    )
+  }
+}
+class App extends Component {
+
+  state = {
+    valor: 3,
+    nombre: '',
+    apellido: '',
+  }
+
+  updateValues = (prop, value) => {
+    this.setState({[prop]: value});
+  }
+
+
+  // la funcion render se ejecuta cada vez que el estado del componente ha sido cambiado y cuando el metodo redender de un componnte padre es llamado y tbn los hacen los hijos.
+  //
+  render(){ 
+    console.log(this.state);
+    return (
+      <div>
+        <p>Hola Mundo</p>
+
+
+        {this.state.valor === 3? <Button chanchito='feliz' /> : null}
+        <button 
+          className={`${this.state.valor}`} 
+          onClick={() => this.setState({ valor: 2}) }>
+          Enviar App
+        </button>
+
+        <p>Nombre: {`${this.state.nombre}`} </p>
+        <Input 
+          value={this.state.nombre}
+          onChange={(e) => this.updateValues('nombre', e.target.value)}
+        />
+        <p>Apellido: {`${this.state.apellido}`}</p>
+        <Input 
+          value={this.state.apellido}
+          onChange={(e) => this.updateValues('apellido', e.target.value)}
+        />
+
+      </div>
+    )
+  }
+}
 export default App;
+
