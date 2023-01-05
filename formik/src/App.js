@@ -1,4 +1,8 @@
-import { useFormik } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import InputText from './components/InputText'
+import CheckBox from './components/Checkbox'
+import Select from './components/Select'
+import Radio from './components/Radio'
 
 const validate = (values) => { // validatte se ejecuta cuando tocamos el campo
   const errors = {}
@@ -23,37 +27,54 @@ const validate = (values) => { // validatte se ejecuta cuando tocamos el campo
     errors.email = 'El email es muy corto'
   }
 
+
+  if(!values.radio){
+    errors.radio = 'Requerido'
+  }
+  console.log(values)
+
   return errors;
 } 
 
 function App() {
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      lastname: '',
-      email: '',
-    },
-    validate,
-    onSubmit: values => console.log(values)
-  })
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <label>Nombre</label>
-      <input type='text' {...formik.getFieldProps('name')}/>
-      {formik.touched.name && formik.errors.name ? <div>{formik.errors.name}</div> : null}
-      <br />
+    <Formik 
+      initialValues={{ name: '', lastname: '', email: '', pan: '', radio: ''}}
+      validate={validate}
+      onSubmit={values => console.log(values)}
+    >
+        <Form>
+         
+          <InputText name='name' label='Nombre'/>
+          <br />
 
-      <label>Apellido</label>
-      <input type='text' {...formik.getFieldProps('lastname')}/>
-      {formik.touched.lastname && formik.errors.lastname ? <div>{formik.errors.lastname}</div> : null }
+          <label>Apellido</label>
+          <Field name='lastname' type='text'/>
+          <ErrorMessage name='lastname'/>
 
-      <br />
+          <br />
+          <label>Email</label>
+          <Field name='email' type='email'/>
+          <ErrorMessage name='email'/>
 
-      <label>Email</label>
-      <input  type='email' {...formik.getFieldProps('email')}/>
-      {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null }
-      <button type='submit'>Enviar</button>
-    </form>
+          <Select name='pan' label='Tipo de pan'>
+            <option value=''>Seleccione un pan</option>
+            <option value='pan-rico'>Pan Rico</option>
+            <option value='pan-dulce'>Pan Dulce</option>
+            <option value='pan-sal'>Pan Sal</option>
+          </Select>
+
+          <CheckBox name='accept'>Acepto Terminos y condiciones</CheckBox> 
+
+          <Radio name='radio' value='radio1' label='radio1'></Radio>
+          <Radio name='radio' value='radio2' label='radio2'></Radio>
+          <Radio name='radio' value='radio3' label='radio3'></Radio>
+          <ErrorMessage name='radio'/>
+            <button type='submit'>Enviar</button>
+
+        </Form>
+
+    </Formik>
   );
 }
 export default App;
